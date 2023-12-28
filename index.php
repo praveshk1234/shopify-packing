@@ -71,10 +71,10 @@ $getblock = $jsonobj['slips']['blocks'];
 $getcontents = $jsonobj['slips']['contents'];
 for ($x = 1; $x <= $blockcount; $x++) {
   $xy = "block".$x."";
-echo " <tr class='block".$x." blockcontent'>
+echo " <tr class='block".$x." blockcontent' data-index=".$x.">
    <th scope='row mb-3'>".$x."</th>
       <th class='title'>  <input type='text' class='imagetitle' name='title".$x."' value='".$getblock[$xy]['title']."' class='form-control'></th>
-      <td>  <input type='url' class='imageurl' name='image".$x."' value='".$getblock[$xy]['url']."' class='form-control'></td>
+      <td>  <input type='url' class='imageurl' name='image".$x."' value='".$getblock[$xy]['url']."' class='form-control' required></td>
       <td><div class='col img-box'>
       <button onclick='removeRow(this)' class='close-btn'> &#215;</button>
 <img src ='".$getblock[$xy]['url']."' width='100' height='100' id='imageblock' />
@@ -156,7 +156,7 @@ document.querySelector('#addblock').addEventListener('click',function(e){
   console.log()
 e.preventDefault()
 
-const html = `<tr class='block${elementCount} blockcontent'><th scope='row mb-3'>${elementCount}</th> <th class='title'>  
+const html = `<tr class='block${elementCount} blockcontent' data-index='${elementCount}'><th scope='row mb-3'>${elementCount}</th> <th class='title'>  
 <input type='text' class='imagetitle' name='title${elementCount}'  class='form-control' required></th>
       <td>  <input type='url' class='imageurl' name='image${elementCount}' class='form-control' required></td>
       <td><div class='col img-box'>
@@ -168,15 +168,31 @@ const html = `<tr class='block${elementCount} blockcontent'><th scope='row mb-3'
 tablebox.insertAdjacentHTML('beforeend',html);
 })
 //Close the new append row in table
+function getNextSiblings(cur_row){
+var nextSibling = cur_row.nextElementSibling;
+
+ while (nextSibling) {
+  let dataindex = nextSibling.getAttribute('data-index');
+  let currentIndex = dataindex - 1;
+  nextSibling.setAttribute('data-index',currentIndex);
+  nextSibling.firstElementChild.innerText = currentIndex;
+  nextSibling.classList.remove(`block${dataindex}`);
+  nextSibling.classList.add(`block${currentIndex}`);
+ nextSibling.querySelector('.imagetitle').setAttribute('name',`title${currentIndex}`);
+ nextSibling.querySelector('.imageurl').setAttribute('name',`image${currentIndex}`);
+    nextSibling = nextSibling.nextElementSibling;
+  }
+}
+
+
 function removeRow(button) {
 
-console.log("click",button)
 
-     let tbody =button.closest('tbody');
-     console.log("iii",tbody.lastChild)
-     tbody.removeChild(tbody.lastChild)
-   
-   //  row.parentNode.removeChild(row);
+
+     const currentrow =button.closest('tr');
+   //  console.log("iii",currentrow)
+getNextSiblings(currentrow);
+ currentrow.remove();
 }
 
 
