@@ -41,7 +41,7 @@ $blockcount = count($getblocks);
 
 
 $item1 = $getblocks['block1']['title'];
-$item2 = $getblocks['block2']['title'];
+//$item2 = $getblocks['block2']['title'];
 //$item3 = $getblocks['block3']['title'];
 
 $itemtitle = array_column($getblocks, 'title');
@@ -377,34 +377,6 @@ echo "<div class='row avoid fullpage ' >
 }
  }
 
-//    $y1 = "content1";
-
-// echo "<div class='row avoid fullpage ".($is_condition1?'':'hidden')."' >
-// <div class='boxitem mb-4 px-0' style='text-align: center; display: flex; justify-content: center; align-items: center; flex-direction: column-reverse;'>
-//         <label for='richtext1'>".$jsonobj->slips->$y1->title.":</label>
-// <div class='editor contentbox1' style='text-align:center;'>
-// ".$jsonobj->slips->$y1->richtext."
-// </div></div></div>";
-
-//    $y2 = "content2";
-// echo "<div class='row avoid fullpage ".($is_condition2 ?'':'hidden')."' >
-// <div class='boxitem mb-4 px-0' style='text-align: center; display: flex; justify-content: center; align-items: center; flex-direction: column-reverse;'>
-//         <label for='richtext2'>".$jsonobj->slips->$y2->title.":</label>
-// <div class='editor contentbox2' style='text-align:center;'>
-// ".$jsonobj->slips->$y2->richtext."
-// </div></div></div>";
-
-//    $y3 = "content3";
-// echo "<div class='row avoid fullpage ".($is_condition3?'':'hidden')." ' >
-// <div class='boxitem mb-4 px-0' style='text-align: center; display: flex; justify-content: center; align-items: center; flex-direction: column-reverse;'>
-//         <label for='richtext3'>".$jsonobj->slips->$y3->title.":</label>
-// <div class='editor contentbox3' style='text-align:center;'>
-// ".$jsonobj->slips->$y3->richtext."
-// </div></div></div>";
-
-
-
-
 
 
 ?>
@@ -680,4 +652,107 @@ async function item() {
 
                if(is_content1){
                 const content1Image = await firstImage(document.querySelector('.contentbox1')); 
-                argarr.push(conten
+
+                argarr.push(content1Image);
+              }
+             
+                      // Capture content2 as an image
+              if(is_content2){
+                const content2Image = await firstImage(document.querySelector('.contentbox2'));
+                argarr.push(content2Image);
+                }
+         
+
+                // Capture content2 as an image
+                if(is_content2){
+                const content3Image = await firstImage(document.querySelector('.contentbox3'));
+                // Generate the PDF using the captured images
+                argarr.push(content3Image);
+                }
+              //  generatePDF(content1Image, content2Image,content3Image);
+
+                 generatePDF.apply(this,argarr);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+item()
+function generatePDF(...contentarr){
+
+    var opt = {
+    margin: 1,
+    
+image: { type: 'webp', quality: 0.9 },  
+  html2canvas: {
+  
+    useCORS: true,
+
+  },
+    jsPDF: {
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'p'
+    }
+};
+    html2pdf().from(document.querySelector('.printpreview')).set(opt).toPdf().get('pdf').then(function (pdf) {
+const curreImag = <?php echo json_encode($curImageArray); ?>;
+  console.log(curreImag);
+
+  let boxes = Array.from(document.querySelectorAll('#js-inputimage input')).filter((item)=>{
+   let title = item.getAttribute('data-title');
+
+   if(curreImag.includes(title)){
+   // item.remove();
+    return item
+   }
+    
+
+  });
+ console.log("boxes",boxes)
+   const newImageObj=  boxes.map((value,key)=>{
+        let img = new Image();
+       return img.src=value.value;
+     })
+  
+   
+for(let i = 0; i < contentarr.length  ;i++){
+
+       pdf.addPage([190, 90], 'l')
+  pdf.addImage(contentarr[i],'JPEG', 10, 20, 180, 50)
+}
+
+for(let i = 0; i < newImageObj.length  ;i++){
+
+       pdf.addPage([190, 90], 'l')
+  pdf.addImage(newImageObj[i],'JPEG', 0, 0, 190, 90)
+}
+
+
+ window.open(pdf.output('bloburl'));
+})
+}   
+    
+    
+    
+}
+
+  document.addEventListener("DOMContentLoaded", (event) => {
+const customername = "<?php echo $order['shipping_address']['name']; ?>"
+
+ document.querySelectorAll('.editor').forEach((content) =>{
+    let contentItem = content.innerHTML;
+    let textC = contentItem.replaceAll(/{{name}}/gi,customername)
+    content.innerHTML = textC;
+
+ 
+})
+
+
+
+document.getElementById('printpage').onclick = createPDF;
+  });
+
+
+</script>
+</body>
+</html>
