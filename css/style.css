@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+body{
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+header {
+    background-color: #000;
+}
+header a.nav-item {
+    color: white;
+    font-size: 14px;
+    margin-left: 15px;
+}
+header a.nav-item.nav-link.active {
+    color: #fff;
+}
+header .navbar-brand img {
+    width: 100px;
+}
+header a.upload-btn {
+    background-color: white;
+    border-radius: 0;
+    color: #000;
+    font-weight: 500;
+}
+table {
+    font-size: 15px;
+}
+table :is(td, th) {
+    padding: 15px 10px !important;
+}
+table a {
+    background-color: #000;
+    color: #fff;
+    text-decoration: none;
+    padding: 6px 15px;
+}
+
+.upload-content-sec .boxitem {
+    height: 100%;
+}
+.upload-content-sec .boxitem label {
+    font-weight: 500;
+}
+.upload-content-sec td input {
+    width: 95%;
+}
+.upload-content-sec td img {
+    width: 350px;
+    height: auto;
+    object-fit: contain;
+}
+.submit-btn {
+    background-color: black;
+    border-color: black;
+    width: 160px;
+    border-radius: 0;    
+    margin: 10px 0;    
+    font-size: 14px;
+    transition: .3s ease-in-out;
+}
+.submit-btn:hover,
+a.print-preview-btn:hover {
+    transform: scale(1.1);
+    background-color: #000;
+    border-color: #000;
+    color: #fff !important;
+}
+a.print-preview-btn {
+    background-color: #000;
+    border-color: black;
+    width: 160px;
+    text-align: center;
+    border-radius: 0;
+    padding: 8px 30px;
+    text-decoration: none;
+    color: #fff !important;
+    margin: 0 12px;
+    font-size: 14px;
+    transition: .3s ease-in-out;
+}
+
+
+
+.contentbox1,
+.contentbox2,
+.contentbox3 {
+
+    max-width: 700px;
+    margin: auto;
+}
+.contentbox1 p u,
+.contentbox2 p u,
+.contentbox3 p u {
+    font-size: 18px;
+    font-weight: 500;
+    font-style: italic;
+    text-decoration: none;
+}
+.contentbox1 p,
+.contentbox2 p,
+.contentbox3 p {
+    font-size: 15px;
+    line-height: 25px;
+    letter-spacing: 1px;
+    position: relative;
+}
+.contentbox1 p:has(u):after,
+.contentbox2 p:has(u):after,
+.contentbox3 p:has(u):after {
+    content: "";
+    width: 400px;
+    height: 1px;
+    background-color: black;
+    position: absolute;
+    bottom: -12px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+.boxitem {
+    margin-bottom: 50px;
+}
+.img-box{
+    position: relative;
+}
+.img-box .close-btn{
+    font-size: 40px;
+    display: block;
+    position: absolute;
+    right: 20px;
+    cursor: pointer;
+}

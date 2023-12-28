@@ -1,0 +1,28 @@
+{
+    "slips": {
+        "blocks": {
+            "block1": {
+                "title": "Item 1",
+                "url": "https:\/\/cdn.shopify.com\/s\/files\/1\/0197\/0742\/8926\/files\/Adam_how_to_wear_1__page-0001.jpg?v=1702269035"
+            },
+            "block2": {
+                "title": "Item2",
+                "url": "https:\/\/cdn.shopify.com\/s\/files\/1\/0197\/0742\/8926\/files\/Adam_how_to_wear_1__page-0001.jpg?v=1702269035"
+            }
+        },
+        "contents": {
+            "content1": {
+                "title": "order is the 2nd order above \u20ac20",
+                "richtext": "<p><u>Loyalty must be rewarded<\/u><\/p><p><br><\/p><p>Dear {{name}} ongoing support has not gone unnoticed.<\/p><p>Here is a special discount for your future order.<\/p><p>You can use the code: <strong>APPRECIATE20<\/strong> to get $20.00 off on your next order. The code has no expiration date.<\/p><p><br><\/p><p>Thanks again and enjoy your piece!<\/p>"
+            },
+            "content2": {
+                "title": "2nd order above \u20ac20 when country = Netherlands",
+                "richtext": "<p><u>Loyaliteit moet beloond worden<\/u><\/p><p><br><\/p><p>Je {{name}} support is niet onopgemerkt gebleven.<\/p><p>Hier is een speciale korting voor je toekomstige bestelling.<\/p><p>Je kunt de code: <strong>BEDANKT20<\/strong> gebruiken om \u20ac20,00 te krijgen korting<\/p><p>op je volgende order. De code heeft geen vervaldatum.<\/p><p><br><\/p><p>Nogmaals bedankt en veel plezier toegewenst<\/p>"
+            },
+            "content3": {
+                "title": " 3rd order above \u20ac20 and country = Netherlands.",
+                "richtext": "<p><u>We zijn ontzettend dankbaar voor de steun die je ons hebt gegeven!<\/u><\/p><p><br><\/p><p>Bedankt {{name}} voor jouw voortdurende steun! Gebruik code <strong>STEUN25<\/strong><\/p><p>voor een korting van \u20ac25 op jouw volgende bestelling.<\/p><p>Nogmaals bedankt en veel plezier met jouw aankoop!<\/p>"
+            }
+        }
+    }
+}
