@@ -18,7 +18,7 @@ require_once('order.php');
 <?php 
 $orderarray = json_decode($single_order,true);
 $order = $orderarray['order'];
-$order_date = date( 'Y m d',strtotime($order['created_at']) ) ;
+$order_date = date( 'F j, Y',strtotime($order['created_at']) ) ;
 
 $json = file_get_contents('../output.json',true);
 $jsonobj = json_decode($json,true);
@@ -40,7 +40,7 @@ $getcontents=$jsonobj['slips']['contents'];
 $blockcount = count($getblocks);
 
 
-$item1 = $getblocks['block1']['title'];
+//$item1 = $getblocks['block1']['title'];
 //$item2 = $getblocks['block2']['title'];
 //$item3 = $getblocks['block3']['title'];
 
@@ -270,7 +270,13 @@ echo "
 foreach($line_item['properties'] as $key => $property){
  $property_first_char = $property;
  $property_first_char = $property['name'][0];
- if(($property['value'] != "") and ($property_first_char != '_')){
+if(str_contains($property['name'],'Preview')){
+ echo " <div class='product-option'> <span>".$property['name'].":</span>
+  <span> 
+<img src=".$property['value']." width='20' height='20'/>
+  </span></div>
+                              ";}
+ else if(($property['value'] != "") and ($property_first_char != '_')){
  echo " <div class='product-option'> <span>".$property['name'].":</span>
                               <span> ".$property['value']."</span></div>
                               ";
@@ -394,13 +400,15 @@ echo "<div class='row avoid fullpage ' >
   }
 
   .wrapper {
-    width: 831px;
+    width: 710px;
     margin: auto;
     padding: 4em;
     font-family: "Noto Sans", sans-serif;
     font-weight: 250;
   }
-
+  .printpreview{
+    font-size: 10px;
+  }
   .header {
     width: 100%;
     display: -webkit-box;
@@ -635,7 +643,6 @@ var opt = {
     html2pdf().from(element).set(opt).toCanvas().toImg().get('canvas').then(
 function(canvas){
 
-
   resolve(canvas.toDataURL('image/jpeg')) ;
 
 }
@@ -671,21 +678,21 @@ async function item() {
                 }
               //  generatePDF(content1Image, content2Image,content3Image);
 
-                 generatePDF.apply(this,argarr);
+             generatePDF.apply(this,argarr);
             } catch (error) {
                 console.error('Error:', error);
             }
         };
-item()
+item();
 function generatePDF(...contentarr){
 
     var opt = {
-    margin: 1,
+    margin: [10,15,10,20],
     
 image: { type: 'webp', quality: 0.9 },  
   html2canvas: {
   
-    useCORS: true,
+   useCORS: true,
 
   },
     jsPDF: {
@@ -694,9 +701,10 @@ image: { type: 'webp', quality: 0.9 },
         orientation: 'p'
     }
 };
-    html2pdf().from(document.querySelector('.printpreview')).set(opt).toPdf().get('pdf').then(function (pdf) {
+const mainelement =document.querySelector('.printpreview');
+    html2pdf().from(mainelement).set(opt).toPdf().get('pdf').then(function (pdf) {
 const curreImag = <?php echo json_encode($curImageArray); ?>;
-  console.log(curreImag);
+
 
   let boxes = Array.from(document.querySelectorAll('#js-inputimage input')).filter((item)=>{
    let title = item.getAttribute('data-title');
@@ -708,7 +716,7 @@ const curreImag = <?php echo json_encode($curImageArray); ?>;
     
 
   });
- console.log("boxes",boxes)
+ 
    const newImageObj=  boxes.map((value,key)=>{
         let img = new Image();
        return img.src=value.value;
@@ -730,9 +738,10 @@ for(let i = 0; i < newImageObj.length  ;i++){
 
  window.open(pdf.output('bloburl'));
 })
+
 }   
-    
-    
+  
+
     
 }
 

@@ -2,7 +2,7 @@
 
 // Set variables for our request
 $shop = $_GET['shop'];
-$api_key = "f59af04660fbc6c97de884900c52e9fd";
+$api_key = "65e963264353bdd2930b24affacb1acd";
 $scopes = "write_orders,read_orders,write_products";
 $redirect_uri = "https://staging.vipankumar.com/packingslip/generate_token.php";
 

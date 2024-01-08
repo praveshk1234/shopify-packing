@@ -19,7 +19,7 @@ $blockcount =count($getblocks);
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style type="text/css">
 body {
-    font-size: 15px;
+    font-size: 10px;
   }
   * {
   box-sizing: border-box;
@@ -402,11 +402,25 @@ echo "<div class='flex-line-item'>
           ".($line_item['variant_title'] ? " <span class='line-item-description-line'>".$line_item['variant_title']." </span>":"")."
        
               ".($line_item['sku'] ? " <span class='line-item-description-line'>".$line_item['sku']." </span>":"")."";
-      foreach($line_item['properties'] as $key => $property){
- $property_first_char = $property; 
+
+
+
+
+foreach($line_item['properties'] as $key => $property){
+ $property_first_char = $property;
+ $property_first_char = $property['name'][0];
+if(str_contains($property['name'],'Preview')){
+ echo " <div class='product-option'> <span>".$property['name'].":</span>
+  <span> 
+<img src=".$property['value']." width='20' height='20'/>
+  </span></div>
+                              ";}
+ else if(($property['value'] != "") and ($property_first_char != '_')){
  echo " <div class='product-option'> <span>".$property['name'].":</span>
                               <span> ".$property['value']."</span></div>
                               ";
+  
+ }
 }
        echo "</p></div></div>";
 }
@@ -454,7 +468,7 @@ echo "<div class='row avoid fullpage'>
 }
 ?>
 
-<script>
+<script type="text/javascript">
 
 
 
@@ -535,9 +549,10 @@ image: { type: 'webp', quality: 0.9 },
         orientation: 'p'
     }
 };
-    html2pdf().from(document.querySelector('.printpreview')).set(opt).toPdf().get('pdf').then(function (pdf) {
+const mainelement= document.querySelector('.printpreview');
+    html2pdf().from(mainelement).set(opt).toPdf().get('pdf').then(function (pdf) {
 
-   
+   console.log('hello how are you');
 for(let i = 0; i < contentarr.length  ;i++){
 
        pdf.addPage([190, 90], 'l')
