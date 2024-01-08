@@ -2,14 +2,7 @@
 
 $ids = $_GET['ids'];
 
-require_once('getorder.php');
-
-$json = file_get_contents('../output.json',true);
-$jsonobj = json_decode($json,true);
-
-$getblocks = $jsonobj['slips']['blocks'];
-$getcontents=$jsonobj['slips']['contents'];
-$blockcount = count($getblocks);
+require_once('order.php');
 ?>
 
 <!DOCTYPE html>
@@ -22,26 +15,35 @@ $blockcount = count($getblocks);
 
 </head>
 <body>
-	<button type="text" id="printpage">Print</button>
-<a href='./../index.php'>Upload Images</a>
-
-<link rel="stylesheet" href="https://cdn.shopify.com/s/files/1/0197/0742/8926/files/libre-barcode-39-inline.css?v=1675429300" type="text/css" media="all">
-
-<div id="js-inputimage">
-  <?php
-  for ($x = 1; $x <= $blockcount; $x++) {
-     $xy = "block".$x."";
-echo "<input type='hidden' id='imageblock-".$x."' data-title='".$getblocks[$xy]['title']."' value='".$getblocks[$xy]['url']."'>"; 
-}
-?>
-</div>
 <?php 
-foreach($ids as $key){
-$getorder = get_order($key)	;
-$orderarray = json_decode($getorder,true);
+foreach($ids as $key){	
+$orderarray = json_decode($single_order,true);
 $order = $orderarray['order'];
 $order_date = date( 'F j, Y',strtotime($order['created_at']) ) ;
 
+$json = file_get_contents('../output.json',true);
+$jsonobj = json_decode($json,true);
+
+
+$customerid = $order['customer']['id'];
+$customer_array = get_customer($customerid);
+
+$customer = $customer_array['customer'];
+
+$customer_order_count = $customer['orders_count'];
+
+//echo "order count item".$customer['orders_count'];
+// item condition 
+
+//echo "<pre>";
+$getblocks = $jsonobj['slips']['blocks'];
+$getcontents=$jsonobj['slips']['contents'];
+$blockcount = count($getblocks);
+
+
+//$item1 = $getblocks['block1']['title'];
+//$item2 = $getblocks['block2']['title'];
+//$item3 = $getblocks['block3']['title'];
 
 $itemtitle = array_column($getblocks, 'title');
 
@@ -60,13 +62,41 @@ $order_price = $order['total_price'];
 $customer_country = $order['shipping_address']['country_code'];
 
 
+// // show when order is the 2nd order above €20
+ if($order_price > $price && $customer_country == $country_code && $customer_order_count == 2)
+ $is_condition2 = true;
 
+ else if($order_price > $price && $customer_order_count == 2)
+ $is_condition1 = true;
+
+// 2nd order above €20 when country = Netherlands
+
+
+
+// //Customer 3rd order above €20 and country = Netherlands.
+else if($order_price > $price && $customer_country == $country_code && $customer_order_count == 3)
+ $is_condition3 = true;
+
+else{
+  $is_condition1=false;
+$is_condition2=false;
+$is_condition3=false;
+
+}
 
 ?>
-
-
+<button type="text" id="printpage">Print</button>
+<a href='./../index.php'>Upload Images</a>
+<div id="js-inputimage">
+  <?php
+  for ($x = 1; $x <= $blockcount; $x++) {
+     $xy = "block".$x."";
+echo "<input type='hidden' id='imageblock-".$x."' data-title='".$getblocks[$xy]['title']."' value='".$getblocks[$xy]['url']."'>"; 
+}
+?>
+</div>
 <div class="printpreview">
-
+<link rel="stylesheet" href="https://cdn.shopify.com/s/files/1/0197/0742/8926/files/libre-barcode-39-inline.css?v=1675429300" type="text/css" media="all">
 <div class="wrapper">
   <div class="header">
     <div class="order-title">
@@ -339,7 +369,6 @@ Het Gangboord 19, 9206 BJ Drachten, Netherlands
 
 </div>
 </div>
-
   <?php
 }
 
@@ -590,70 +619,6 @@ echo "<div class='row avoid fullpage ' >
     width:100%;
   }
 </style>
-<script>
-function createPDF() {
- const mainelement =Array.from(document.querySelectorAll('.printpreview'));
 
-   let boxes = Array.from(document.querySelectorAll('#js-inputimage input'));
-   const options = {
-        margin: 10,
-        filenamge:'output.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-
-      let doc = html2pdf().set(options).from(mainelement[0]).toPdf()
-      for (let j = 1; j < mainelement.length; j++) {
-        doc = doc.get('pdf').then(
-          pdf => {
-
-   let newImageObj=  boxes.map((value,key)=>{
-        let img = new Image();
-       return img.src=value.value;
-     })
-
-for(let i = 0; i < newImageObj.length  ;i++){
-
-  pdf.addImage(newImageObj[i],'JPEG', 0, 0, 190, 90)
-}
-   pdf.addPage('a4','p')
-
-           }
-        ).from(mainelement[j]).toContainer().toCanvas()
-       .get('pdf')
-        .then(
-         function(pdf){
-
-
- let newImageObj=  boxes.map((value,key)=>{
-        let img = new Image();
-       return img.src=value.value;
-     })
-
-for(let i = 0; i < newImageObj.length  ;i++){
-
-       pdf.addPage()
-  pdf.addImage(newImageObj[i],'JPEG', 0, 0, 190, 90)
-}
-
-
-         }
-
-        )
-        .toPdf()
-      }
-      // doc.save()
- doc.get('pdf').then(newpdf =>{
- window.open(newpdf.output('bloburl'))
- })
-
-}
-document.getElementById('printpage').onclick = createPDF;
-
-
-
-
-</script>
 </body>
 </html>
